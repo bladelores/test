@@ -8,7 +8,7 @@ namespace Modem.Amt.Export.Connections
 {
     public interface IRealtimeConnection
     {
-        void ConfigureConnection(long wellboreId, List<Parameter> parameters);
+        void ConfigureConnection(long wellboreId, List<ParameterWithLimit> parametersWithLimit);
         System.Threading.Tasks.Task<decimal[]> GetNewData();
     }
 }

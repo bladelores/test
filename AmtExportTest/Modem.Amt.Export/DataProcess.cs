@@ -4,28 +4,20 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.IO.Pipes;
-using Modem.Amt.Export.Utility;
+using Modem.Amt.Export.Data;
 
 namespace Modem.Amt.Export
 {
-    public class DataProcess
+    public static class DataProcess
     {
-        public static decimal[] TestConnectionProcess()
+        public static List<decimal> ProcessNewData(List<decimal?> newData, List<ParameterWithLimit> parametersWithLimit)
         {
-            var random = new Random();
-            var randomArray = new decimal[5];
-            for (int i = 0; i < 5; i++) randomArray[i] = random.Next(0, 100);
-            return randomArray;
-        }
-
-        public static decimal[] PipeConnectionProcess(NamedPipeClientStream pipeClient)
-        {
-            StreamString reader = new StreamString(pipeClient);
-            var s = reader.ReadString();
-            if (s.Equals("end")) return null;
-            List<string> parsedNumbers = s.Split(' ').ToList();
-            List<decimal> numbers = parsedNumbers.Select(x => Decimal.Parse(x)).ToList();
-            return numbers.ToArray();
+            var processedData = new List<decimal>();
+            for (int i = 0; i < parametersWithLimit.Count; i++)
+                processedData[i] = newData[i] == null
+                    ? parametersWithLimit[i].LimitPoint
+                    : Convert.ToDecimal(newData[i]) / parametersWithLimit[i].Multiplier;
+            return processedData;
         }
     }
 }

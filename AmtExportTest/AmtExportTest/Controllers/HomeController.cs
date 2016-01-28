@@ -9,6 +9,7 @@ using Modem.Amt.Export.Data;
 using Modem.Amt.Export.Connections;
 using System.IO;
 using System.IO.Pipes;
+using System.Text;
 
 namespace AmtExportTest.Controllers
 {
@@ -26,10 +27,16 @@ namespace AmtExportTest.Controllers
 
             //IRealtimeConnection testConnection;
             var pipeConnection = new PipeConnection();
+            var limitPoints = new List<decimal>();
 
             using (var store = new Store())
             {
                 var data = store.GetData(parameters, new Wellbore { Id = wellboreId }, startTime, (DateTime)endTime);
+
+                StringBuilder queryBuilder = new StringBuilder();
+                parameters.ForEach(x => store.FillParameter(x));
+                parameters.ForEach(x => queryBuilder.Append(",").Append(x.Code));
+                limitPoints = store.GetLimitPoints(wellboreId, startTime, parameters, queryBuilder);
 
                 Response.Write(data);
                 Response.Flush();
@@ -37,7 +44,18 @@ namespace AmtExportTest.Controllers
 
             if (endTime == null)
                 return Json(new { success = true });
-            pipeConnection.ConfigureConnection(wellboreId, parameters);
+
+            List<ParameterWithLimit> parametersWithLimit = new List<ParameterWithLimit>();
+            foreach (decimal limitPoint in limitPoints)
+                parameters.ForEach(x => parametersWithLimit.Add(new ParameterWithLimit
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    Name = x.Name,
+                    Multiplier = x.Multiplier,
+                    LimitPoint = limitPoint
+                }));
+            pipeConnection.ConfigureConnection(wellboreId, parametersWithLimit);
 
             pipeConnection.PipeClient =
                        new NamedPipeClientStream(".", "PipeConnection",

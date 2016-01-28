@@ -153,7 +153,7 @@ namespace Modem.Amt.Export
                 if (resultStringArray.Contains(parameter.Code))
                 {
                     int symbolPos = resultStringArray.IndexOf(parameter.Code);
-                    parsedList.Add(decimal.Parse(resultStringArray.Substring(symbolPos + parameter.Code.Length + 2, resultStringArray.IndexOf('\"', symbolPos) - symbolPos - parameter.Code.Length)));
+                    parsedList.Add(decimal.Parse(resultStringArray.Substring(symbolPos + parameter.Code.Length + 2, resultStringArray.IndexOf('\"', symbolPos + parameter.Code.Length + 2) - symbolPos - parameter.Code.Length - 2)));
                 }
                 else
                     parsedList.Add(NoValue);
@@ -172,7 +172,7 @@ namespace Modem.Amt.Export
             parameters.ForEach(x => FillParameter(x));
 
             StringBuilder queryBuilder = new StringBuilder();
-            parameters.ForEach(x => queryBuilder.Append(", ").Append(x.Code));
+            parameters.ForEach(x => queryBuilder.Append(",").Append(x.Code));
             var limitCorrector = GetLimitPoints(wellbore.Id, start, parameters, queryBuilder);
 
             queryBuilder.Insert(0, "select time, ");

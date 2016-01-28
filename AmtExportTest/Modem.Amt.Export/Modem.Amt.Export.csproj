@@ -67,6 +67,7 @@
     <Compile Include="Data\Mappings\UnitMapping.cs" />
     <Compile Include="Data\Mappings\WellboreMapping.cs" />
     <Compile Include="Data\Mappings\WellboreStateMapping.cs" />
+    <Compile Include="Data\ParameterWithLimit.cs" />
     <Compile Include="Data\Parameter.cs" />
     <Compile Include="Data\State.cs" />
     <Compile Include="Data\Unit.cs" />
