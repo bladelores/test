@@ -1,0 +1,8 @@
+[Bb]in
+[Oo]bj
+*.suo
+*.user
+*.cache
+*.db
+*.exe
+AmtExportTest/packages

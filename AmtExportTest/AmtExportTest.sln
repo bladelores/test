@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmtExportTest", "AmtExportTest\AmtExportTest.csproj", "{84DEA243-6FEE-4A86-B22A-21BA2F62DA19}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FE40C003-A985-463A-A024-88F2EC247CFC}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modem.Amt.Export", "Modem.Amt.Export\Modem.Amt.Export.csproj", "{1626AA2A-6834-4AA7-83B5-CCED0CD2797C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipeConnectionServer", "TestConnectionPipeServer\PipeConnectionServer.csproj", "{158DCDC1-4F20-48B7-A538-122AADE0F470}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84DEA243-6FEE-4A86-B22A-21BA2F62DA19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84DEA243-6FEE-4A86-B22A-21BA2F62DA19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84DEA243-6FEE-4A86-B22A-21BA2F62DA19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84DEA243-6FEE-4A86-B22A-21BA2F62DA19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1626AA2A-6834-4AA7-83B5-CCED0CD2797C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1626AA2A-6834-4AA7-83B5-CCED0CD2797C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1626AA2A-6834-4AA7-83B5-CCED0CD2797C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1626AA2A-6834-4AA7-83B5-CCED0CD2797C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158DCDC1-4F20-48B7-A538-122AADE0F470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158DCDC1-4F20-48B7-A538-122AADE0F470}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158DCDC1-4F20-48B7-A538-122AADE0F470}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158DCDC1-4F20-48B7-A538-122AADE0F470}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
