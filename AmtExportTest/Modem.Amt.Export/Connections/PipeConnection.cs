@@ -15,12 +15,14 @@ namespace Modem.Amt.Export.Connections
     {
         public NamedPipeClientStream PipeClient { get; set; }
         private long wellboreId;
-        private List<ParameterWithLimit> parametersWithLimit;
+        private List<Parameter> parameters;
+		private List<decimal> limitPoints;
 
-        public void ConfigureConnection(long wellboreId, List<ParameterWithLimit> parametersWithLimit)
+        public void ConfigureConnection(long wellboreId, List<Parameter> parameters, List<decimal> limitPoints)
         {
             this.wellboreId = wellboreId;
             this.parametersWithLimit = parametersWithLimit;
+			this.limitPoints = limitPoints;
         }
         
         public async System.Threading.Tasks.Task<decimal[]> GetNewData()
@@ -42,7 +44,11 @@ namespace Modem.Amt.Export.Connections
                         numbers.Add(null);
                 });
 
-                return DataProcess.ProcessNewData(numbers, parametersWithLimit).ToArray();
+				List<decimal> processedData = DataProcess.ProcessNewData(numbers, parameters, limitPoints);
+				
+				limitPoints = processedData;
+				
+                return processedData.ToArray();
             });
             Task.WaitAll();
             return data;

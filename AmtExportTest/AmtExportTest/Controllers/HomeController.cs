@@ -45,17 +45,7 @@ namespace AmtExportTest.Controllers
             if (endTime == null)
                 return Json(new { success = true });
 
-            List<ParameterWithLimit> parametersWithLimit = new List<ParameterWithLimit>();
-            foreach (decimal limitPoint in limitPoints)
-                parameters.ForEach(x => parametersWithLimit.Add(new ParameterWithLimit
-                {
-                    Id = x.Id,
-                    Code = x.Code,
-                    Name = x.Name,
-                    Multiplier = x.Multiplier,
-                    LimitPoint = limitPoint
-                }));
-            pipeConnection.ConfigureConnection(wellboreId, parametersWithLimit);
+            pipeConnection.ConfigureConnection(wellboreId, parameters, limitPoints);
 
             pipeConnection.PipeClient =
                        new NamedPipeClientStream(".", "PipeConnection",

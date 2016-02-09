@@ -10,13 +10,13 @@ namespace Modem.Amt.Export
 {
     public static class DataProcess
     {
-        public static List<decimal> ProcessNewData(List<decimal?> newData, List<ParameterWithLimit> parametersWithLimit)
+        public static List<decimal> ProcessNewData(List<decimal?> newData, List<Parameter> parameters, List<decimal> limitPoints)
         {
             var processedData = new List<decimal>();
-            for (int i = 0; i < parametersWithLimit.Count; i++)
+            for (int i = 0; i < parameters.Count; i++)
                 processedData[i] = newData[i] == null
-                    ? parametersWithLimit[i].LimitPoint
-                    : Convert.ToDecimal(newData[i]) / parametersWithLimit[i].Multiplier;
+                    ? limitPoints[i]
+                    : Convert.ToDecimal(newData[i]) / parameters[i].Multiplier;
             return processedData;
         }
     }

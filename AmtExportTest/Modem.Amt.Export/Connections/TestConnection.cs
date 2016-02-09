@@ -11,12 +11,14 @@ namespace Modem.Amt.Export.Connections
     public class TestConnection: IRealtimeConnection
     {
         private long wellboreId;
-        private List<ParameterWithLimit> parametersWithLimit;
+        private List<Parameter> parameters;
+		private List<decimal> limitPoints;
 
-        public void ConfigureConnection(long wellboreId, List<ParameterWithLimit> parametersWithLimit)
+        public void ConfigureConnection(long wellboreId, List<Parameter> parameters, List<decimal> limitPoints)
         {
             this.wellboreId = wellboreId;
             this.parametersWithLimit = parametersWithLimit;
+			this.limitPoints = limitPoints;
         }
         
         public async System.Threading.Tasks.Task<decimal[]> GetNewData()
