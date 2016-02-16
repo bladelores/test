@@ -16,16 +16,22 @@ namespace TestConnectionPipeServer
             NamedPipeServerStream pipeServer = new NamedPipeServerStream("PipeConnection", PipeDirection.InOut, 4, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
             pipeServer.WaitForConnection();
             Console.WriteLine("Connected");
-            Console.WriteLine("Enter data in format - %d %d %d ... (or \"end\" to finish input)");
+            Console.WriteLine("Enter data in format - %d %d %d ... (\"send\" to send data, \"end\" to stop input)");
             StreamString ss = new StreamString(pipeServer);
             string input = Console.ReadLine();
             while (!input.Equals("end"))
             {
-                ss.WriteString(input);
+                while (!input.Equals("send"))
+                {
+                    ss.WriteString(input);         
+                    input = Console.ReadLine();
+                    //Thread.Sleep(1000);
+                }
                 Console.WriteLine("Data sent");
+                ss.WriteString("send");
                 input = Console.ReadLine();
-                //Thread.Sleep(1000);
             }
+            
             ss.WriteString("end");
             pipeServer.Close();
         }

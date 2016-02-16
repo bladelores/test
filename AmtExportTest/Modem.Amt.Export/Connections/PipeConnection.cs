@@ -21,34 +21,43 @@ namespace Modem.Amt.Export.Connections
         public void ConfigureConnection(long wellboreId, List<Parameter> parameters, List<decimal> limitPoints)
         {
             this.wellboreId = wellboreId;
-            this.parametersWithLimit = parametersWithLimit;
+            this.parameters = parameters;
 			this.limitPoints = limitPoints;
         }
         
-        public async System.Threading.Tasks.Task<decimal[]> GetNewData()
+        public async System.Threading.Tasks.Task<List<decimal[]>> GetNewData()
         {
-            var data = await Task<decimal[]>.Run(() =>
+            var data = await Task<List<decimal[]>>.Run(() =>
             {
                 StreamString reader = new StreamString(PipeClient);
+                List<decimal?[]> inputData = new List<decimal?[]>();
+
                 var s = reader.ReadString();
+
                 if (s.Equals("end")) return null;
-                List<string> parsedNumbers = s.Split(' ').ToList();
 
-                List<decimal?> numbers = new List<decimal?>();
-                decimal value;
-                parsedNumbers.ForEach(x =>
+                while (!s.Equals("send"))
                 {
-                    if (Decimal.TryParse(x, out value))
-                        numbers.Add(value);
-                    else
-                        numbers.Add(null);
-                });
+                    List<string> parsedNumbers = s.Split(' ').ToList();
 
-				List<decimal> processedData = DataProcess.ProcessNewData(numbers, parameters, limitPoints);
-				
-				limitPoints = processedData;
-				
-                return processedData.ToArray();
+                    List<decimal?> numbers = new List<decimal?>();
+                    decimal value;
+                    parsedNumbers.ForEach(x =>
+                    {
+                        if (Decimal.TryParse(x, out value))
+                            numbers.Add(value);
+                        else
+                            numbers.Add(null);
+                    });
+
+                    inputData.Add(numbers.ToArray());
+
+                    s = reader.ReadString();
+                }
+
+				List<decimal[]> processedData = DataProcess.ProcessNewData(inputData, parameters, limitPoints);
+					
+                return processedData;
             });
             Task.WaitAll();
             return data;

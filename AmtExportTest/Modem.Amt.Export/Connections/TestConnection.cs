@@ -17,11 +17,11 @@ namespace Modem.Amt.Export.Connections
         public void ConfigureConnection(long wellboreId, List<Parameter> parameters, List<decimal> limitPoints)
         {
             this.wellboreId = wellboreId;
-            this.parametersWithLimit = parametersWithLimit;
+            this.parameters = parameters;
 			this.limitPoints = limitPoints;
         }
-        
-        public async System.Threading.Tasks.Task<decimal[]> GetNewData()
+
+        public async System.Threading.Tasks.Task<List<decimal[]>> GetNewData()
         {
             var random = new Random();
             var randomData = await Task<decimal[]>.Run(() =>
@@ -33,12 +33,14 @@ namespace Modem.Amt.Export.Connections
             });
             Task.WaitAll();
 
+            var processedData = new List<decimal[]>();
+            processedData.Add(randomData);
             //var amtData = new AmtData();
             //amtData.Data.Add(randomData);
             if (random.Next(0, 10) == 9)
                 return null;
             else
-                return randomData;
+                return processedData;
         }
     }
 }
