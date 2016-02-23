@@ -161,7 +161,7 @@ namespace Modem.Amt.Export
             return parsedList;
         }
 
-        public List<decimal[]> GetData(List<Parameter> parameters, Wellbore wellbore, DateTime start, DateTime end)
+        public List<string[]> GetData(List<Parameter> parameters, Wellbore wellbore, DateTime start, DateTime end)
         {
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
@@ -178,26 +178,20 @@ namespace Modem.Amt.Export
             queryBuilder.Insert(0, "select time, ");
             queryBuilder.Append(" from temporal_measuring where wellbore_id = :wellboreId and time between :startTime and :endTime");
 
-            var oldValues = new decimal[parameters.Count];
-            for (var i = 0; i < parameters.Count; ++i)
-                oldValues[i] = limitCorrector[i];
-
-            MapperDelegate<decimal[]> mapper = x =>
+            MapperDelegate<string[]> mapper = x =>
             {
-                var r = new decimal[parameters.Count + 1];
+                var r = new string[parameters.Count + 1];
 
                 for (var i = 0; i < parameters.Count; ++i)
                 {
-                    var val = x[i + 1];
-                    r[i] = val == DBNull.Value ? oldValues[i] : Convert.ToDecimal(val) / parameters[i].Multiplier;
+                    r[i] = x[i + 1].ToString();
                 }
-                r[parameters.Count] = Convert.ToDateTime(x[0]).Ticks;
+                r[parameters.Count] = x[0].ToString();
 
-                oldValues = r;
                 return r;
             };
 
-            return new List<decimal[]>(QueryAndMap(queryBuilder.ToString(), new { wellboreId = wellbore.Id, startTime = start, endTime = end }, mapper));
+            return new List<string[]>(QueryAndMap(queryBuilder.ToString(), new { wellboreId = wellbore.Id, startTime = start, endTime = end }, mapper));
         }
     }
 }

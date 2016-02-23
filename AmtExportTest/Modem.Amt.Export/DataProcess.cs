@@ -10,7 +10,7 @@ namespace Modem.Amt.Export
 {
     public static class DataProcess
     {
-        public static List<decimal[]> ProcessNewData(List<decimal?[]> newData, List<Parameter> parameters, List<decimal> limitPoints)
+        public static List<decimal[]> ProcessNewData(List<string[]> newData, List<Parameter> parameters, List<decimal> limitPoints)
         {
             var processedData = new List<decimal[]>();
 
@@ -18,14 +18,16 @@ namespace Modem.Amt.Export
             for (var i = 0; i < parameters.Count; ++i)
                 oldValues[i] = limitPoints[i];
 
-            foreach (decimal?[] row in newData)
+            foreach (string[] row in newData)
             {
-                var r = new decimal[parameters.Count];
+                var r = new decimal[parameters.Count + 1];
                 
                 for (var i = 0; i < parameters.Count; ++i)
                 {
-                    r[i] = row[i] == null ? oldValues[i] : Convert.ToDecimal(row[i]) / parameters[i].Multiplier;
+                    var val = row[i];
+                    r[i] = val == "" ? oldValues[i] : Convert.ToDecimal(val) / parameters[i].Multiplier;
                 }
+                r[parameters.Count] = Convert.ToDateTime(row[parameters.Count]).Ticks;               
                 
                 oldValues = r;
 

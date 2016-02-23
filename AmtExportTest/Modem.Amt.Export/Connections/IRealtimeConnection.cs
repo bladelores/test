@@ -9,6 +9,6 @@ namespace Modem.Amt.Export.Connections
     public interface IRealtimeConnection
     {
         void ConfigureConnection(long wellboreId, List<Parameter> parameters, List<decimal> limitPoints);
-        System.Threading.Tasks.Task<List<decimal[]>> GetNewData();
+        System.Threading.Tasks.Task<List<string[]>> GetNewData();
     }
 }

@@ -25,12 +25,12 @@ namespace Modem.Amt.Export.Connections
 			this.limitPoints = limitPoints;
         }
         
-        public async System.Threading.Tasks.Task<List<decimal[]>> GetNewData()
+        public async System.Threading.Tasks.Task<List<string[]>> GetNewData()
         {
-            var data = await Task<List<decimal[]>>.Run(() =>
+            var data = await Task<List<string[]>>.Run(() =>
             {
                 StreamString reader = new StreamString(PipeClient);
-                List<decimal?[]> inputData = new List<decimal?[]>();
+                List<string[]> inputData = new List<string[]>();
 
                 var s = reader.ReadString();
 
@@ -38,26 +38,27 @@ namespace Modem.Amt.Export.Connections
 
                 while (!s.Equals("send"))
                 {
-                    List<string> parsedNumbers = s.Split(' ').ToList();
+                    string[] parsedData = s.Split(',').ToArray();
 
-                    List<decimal?> numbers = new List<decimal?>();
+                    string[] resultArray = new string[parsedData.Length];
+                    resultArray[parsedData.Length - 1] = parsedData[parsedData.Length - 1];
+
                     decimal value;
-                    parsedNumbers.ForEach(x =>
+                    for (int i = 0; i < parsedData.Length - 1; i++)
                     {
-                        if (Decimal.TryParse(x, out value))
-                            numbers.Add(value);
+                        if (Decimal.TryParse(parsedData[i], out value))
+                            resultArray[i] = value.ToString();
                         else
-                            numbers.Add(null);
-                    });
+                            resultArray[i] = "";
+                    }                  
 
-                    inputData.Add(numbers.ToArray());
+                    inputData.Add(resultArray);
 
                     s = reader.ReadString();
                 }
 
-				List<decimal[]> processedData = DataProcess.ProcessNewData(inputData, parameters, limitPoints);
 					
-                return processedData;
+                return inputData;
             });
             Task.WaitAll();
             return data;

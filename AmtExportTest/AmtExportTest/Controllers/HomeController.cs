@@ -31,14 +31,17 @@ namespace AmtExportTest.Controllers
 
             using (var store = new Store())
             {
-                var data = store.GetData(parameters, new Wellbore { Id = wellboreId }, startTime, (DateTime)endTime);
-
                 StringBuilder queryBuilder = new StringBuilder();
                 parameters.ForEach(x => store.FillParameter(x));
                 parameters.ForEach(x => queryBuilder.Append(",").Append(x.Code));
                 limitPoints = store.GetLimitPoints(wellboreId, startTime, parameters, queryBuilder);
 
-                Response.Write(data);
+                var data = store.GetData(parameters, new Wellbore { Id = wellboreId }, startTime, (DateTime)endTime);
+                var processedData = DataProcess.ProcessNewData(data, parameters, limitPoints);
+
+                limitPoints = processedData.Last().ToList();
+
+                Response.Write(processedData);
                 Response.Flush();
             }
 
@@ -57,7 +60,10 @@ namespace AmtExportTest.Controllers
                 var newData = await pipeConnection.GetNewData();
                 if (newData == null) break;
 
-                Response.Write(newData);
+                var processedRealTimeData = DataProcess.ProcessNewData(newData, parameters, limitPoints);
+                limitPoints = processedRealTimeData.Last().ToList();
+
+                Response.Write(DataProcess.ProcessNewData(newData, parameters, limitPoints));
                 Response.Flush();
             }
             
