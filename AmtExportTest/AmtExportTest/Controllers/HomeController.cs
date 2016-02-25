@@ -39,7 +39,7 @@ namespace AmtExportTest.Controllers
                 var data = store.GetData(parameters, new Wellbore { Id = wellboreId }, startTime, (DateTime)endTime);
                 var processedData = DataProcess.ProcessNewData(data, parameters, limitPoints);
 
-                limitPoints = processedData.Last().ToList();
+                limitPoints = processedData.Last().Take(processedData.Last().Count - 1).ToList();
 
                 Response.Write(processedData);
                 Response.Flush();
@@ -61,7 +61,7 @@ namespace AmtExportTest.Controllers
                 if (newData == null) break;
 
                 var processedRealTimeData = DataProcess.ProcessNewData(newData, parameters, limitPoints);
-                limitPoints = processedRealTimeData.Last().ToList();
+                limitPoints = processedRealTimeData.Last().Take(processedData.Last().Count - 1).ToList();
 
                 Response.Write(DataProcess.ProcessNewData(newData, parameters, limitPoints));
                 Response.Flush();
